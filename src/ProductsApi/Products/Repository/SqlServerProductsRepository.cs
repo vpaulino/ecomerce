@@ -10,9 +10,14 @@ namespace ProductsApi.Products.Repository
     {
         private ProductsDbContext dbContext;
 
+
+        private static readonly Func<ProductsDbContext,long, int, IQueryable<Product>> GetProductsWPagination = EF.CompileQuery<ProductsDbContext,long, int, IQueryable<Product>>((_dbContext, lastProductId, take) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId).Take(take));
+
         public SqlServerProductsRepository(ProductsDbContext dbcontext)
         {
             dbContext = dbcontext;
+            
+            
         }
 
 
@@ -42,9 +47,9 @@ namespace ProductsApi.Products.Repository
         //    return await dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Take(take).Skip(skip).ToListAsync(token);
         //}
 
-        public  IAsyncEnumerable<Product> GetProductsAsync(long lastProductId, int take, CancellationToken token)
+        public  IAsyncEnumerable<Product> GetProducts(long lastProductId, int take, CancellationToken token)
         {
-            var queryable = dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId).Take(take);
+            var queryable = GetProductsWPagination(this.dbContext, lastProductId, take);
             return queryable.AsAsyncEnumerable();
         }
 

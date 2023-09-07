@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A085A46-F395-4155-9FAB-8987B8E3A9AC}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		bombardier-testresults.txt = bombardier-testresults.txt
 	EndProjectSection
 EndProject
 Global

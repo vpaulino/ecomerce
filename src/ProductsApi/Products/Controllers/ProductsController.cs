@@ -31,7 +31,7 @@ namespace ProductsApi.Products.Controllers
         [HttpGet(Name = "GetAllProducts")]
         public async Task<IActionResult> GetAllProducts(int lastProductId, int take, CancellationToken ctoken)
         {
-            IAsyncEnumerable<Product> result =  productsRepository.GetProductsAsync(lastProductId, take, ctoken);
+            IAsyncEnumerable<Product> result =  productsRepository.GetProducts(lastProductId, take, ctoken);
             return Ok(result);
         }
 
