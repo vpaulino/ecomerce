@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using ProductsApi.Extensions;
-using ProductsApi.Repository;
-using ProductsApi.SetupDb;
+using ProductsApi.Products.Repository;
+using ProductsApi.Products.SetupDb;
 
 var builder = WebApplication.CreateBuilder(args);
 

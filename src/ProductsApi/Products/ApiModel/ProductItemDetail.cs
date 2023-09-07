@@ -1,4 +1,4 @@
-﻿namespace ProductsApi.ApiModel
+﻿namespace ProductsApi.Products.ApiModel
 {
     public record ProductItemDtail : ListProductItem
     {

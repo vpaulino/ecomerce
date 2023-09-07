@@ -1,21 +1,21 @@
-﻿namespace ProductsApi.Repository
+﻿namespace ProductsApi.Products.Repository
 {
     public class Product
     {
         public Product(long id, string name, string description, string category, int? rank)
-            :this(name, description, category,rank)
+            : this(name, description, category, rank)
         {
-            this.Id = id;
+            Id = id;
         }
 
         public Product(string name, string description, string category, int? rank)
         {
-         
-            this.Name = name;
-            this.Description = description;
-            this.Category = category;
-            this.Rank = rank;
-            this.Created = DateTime.UtcNow;
+
+            Name = name;
+            Description = description;
+            Category = category;
+            Rank = rank;
+            Created = DateTime.UtcNow;
         }
 
         public long Id { get; }

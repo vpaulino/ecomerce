@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using ProductsApi.Repository;
-using System.Runtime.CompilerServices;
+ 
 
 namespace ProductsApi.Extensions
 {

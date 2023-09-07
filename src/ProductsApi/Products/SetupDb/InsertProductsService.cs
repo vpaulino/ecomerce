@@ -1,6 +1,6 @@
-﻿using ProductsApi.Repository;
+﻿using ProductsApi.Products.Repository;
 
-namespace ProductsApi.SetupDb
+namespace ProductsApi.Products.SetupDb
 {
     public class InsertProductsService
     {
@@ -138,11 +138,11 @@ namespace ProductsApi.SetupDb
         }
 
 
-        public async Task ExecuteAsync(CancellationToken token) 
+        public async Task ExecuteAsync(CancellationToken token)
         {
             foreach (var item in foodProducts)
             {
-                await this.repository.AddProductAsync(new Product(item.Key, item.Value, "Food", 3), token);
+                await repository.AddProductAsync(new Product(item.Key, item.Value, "Food", 3), token);
             }
         }
     }

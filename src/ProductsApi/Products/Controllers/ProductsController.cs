@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using ProductsApi.ApiModel;
-using ProductsApi.Repository;
-using ProductsApi.SetupDb;
+using ProductsApi.Products.Repository;
+using ProductsApi.Products.SetupDb;
 
-namespace ProductsApi.Controllers
+namespace ProductsApi.Products.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
@@ -24,22 +23,22 @@ namespace ProductsApi.Controllers
         [HttpPost(Name = "setup")]
         public async Task<IActionResult> AddProductAsync(CancellationToken ctoken)
         {
-            await this.productsService.ExecuteAsync(ctoken);
+            await productsService.ExecuteAsync(ctoken);
             return Ok();
         }
 
 
         [HttpGet(Name = "GetAllProducts")]
-        public async Task<IActionResult> GetAllProducts(int skip, int take, CancellationToken ctoken)
+        public async Task<IActionResult> GetAllProducts(int lastProductId, int take, CancellationToken ctoken)
         {
-            var result = await this.productsRepository.GetProductsAsync(take, skip, ctoken);
+            IAsyncEnumerable<Product> result =  productsRepository.GetProductsAsync(lastProductId, take, ctoken);
             return Ok(result);
         }
-          
+
         [HttpGet("{id}", Name = "GetProduct")]
         public async Task<IActionResult> GetProductAsync(long id, CancellationToken ctoken)
         {
-            Product productFound = await this.productsRepository.GetProductAsync(id, ctoken);
+            Product productFound = await productsRepository.GetProductAsync(id, ctoken);
             return Ok(productFound);
         }
 
@@ -47,7 +46,7 @@ namespace ProductsApi.Controllers
         [HttpGet("search", Name = "Search")]
         public async Task<IActionResult> SearchAsync(int skip, int take, string keyword, CancellationToken ctoken)
         {
-            IEnumerable<Product> productsFound = await this.productsRepository.SearchProductAsync(take, skip, keyword, ctoken);
+            IEnumerable<Product> productsFound = await productsRepository.SearchProductAsync(take, skip, keyword, ctoken);
             return Ok(productsFound);
         }
 
