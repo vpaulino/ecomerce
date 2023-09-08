@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Linq;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace ProductsApi.Products.Repository
 {
@@ -13,11 +15,13 @@ namespace ProductsApi.Products.Repository
 
         private static readonly Func<ProductsDbContext,long, int, IQueryable<Product>> GetProductsWPagination = EF.CompileQuery<ProductsDbContext,long, int, IQueryable<Product>>((_dbContext, lastProductId, take) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId).Take(take));
 
+        private static readonly Func<ProductsDbContext, long, int, int, IQueryable<Product>> GetProductsByRankWPagination = EF.CompileQuery<ProductsDbContext, long, int,int, IQueryable<Product>>((_dbContext, lastProductId, take, rank) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId && product.Rank == rank).Take(take));
+
+        private static readonly Func<ProductsDbContext, long, int, string, IQueryable<Product>> GetProductsByKeywordWPagination = EF.CompileQuery<ProductsDbContext, long, int, string, IQueryable<Product>>((_dbContext, lastProductId, take, keyword) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId && (product.Name.Contains(keyword) || product.Description.Contains(keyword))).Take(take));
+
         public SqlServerProductsRepository(ProductsDbContext dbcontext)
         {
             dbContext = dbcontext;
-            
-            
         }
 
 
@@ -27,35 +31,17 @@ namespace ProductsApi.Products.Repository
             await dbContext.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        ///  SELECT [t].[Id], [t].[Category], [t].[Created], [t].[Description], [t].[Name], [t].[Rank]
-        ////FROM(
-        ////SELECT TOP(@__p_0)[p].[Id], [p].[Category], [p].[Created], [p].[Description], [p].[Name], [p].[Rank]
-        ////      FROM [Product] AS [p]
-        ////) AS[t]
-        ////ORDER BY(SELECT 1)
-        ////  OFFSET @__p_1 ROWS</remarks>
-        /// <param name="take"></param>
-        /// <param name="skip"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        //public async Task<IEnumerable<Product>> GetProductsAsync(int take, int skip, CancellationToken token)
-        //{
-        //    return await dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Take(take).Skip(skip).ToListAsync(token);
-        //}
-
+        
         public  IAsyncEnumerable<Product> GetProducts(long lastProductId, int take, CancellationToken token)
         {
             var queryable = GetProductsWPagination(this.dbContext, lastProductId, take);
             return queryable.AsAsyncEnumerable();
         }
 
-        public async Task<IEnumerable<Product>> GetProductsRankedAsync(int take, int skip, int rank, CancellationToken token)
+        public  IAsyncEnumerable<Product> GetProductsRankedAsync(long lastProductId, int take, int rank, CancellationToken token)
         {
-            return await dbContext.Product.AsNoTracking().Where(product => product.Rank == rank).Take(take).Skip(skip).ToListAsync(token);
+            var queryable = GetProductsByRankWPagination(this.dbContext, lastProductId, take, rank);
+            return queryable.AsAsyncEnumerable();
         }
 
         public async Task<Product> GetProductAsync(long id, CancellationToken ctoken)
@@ -63,9 +49,10 @@ namespace ProductsApi.Products.Repository
             return await dbContext.Product.AsNoTracking().Where(product => product.Id == id).FirstOrDefaultAsync(ctoken);
         }
 
-        public async Task<IEnumerable<Product>> SearchProductAsync(int take, int skip, string keyword, CancellationToken ctoken)
+        public IAsyncEnumerable<Product> SearchProductAsync(long lastProductId, int take, string keyword, CancellationToken ctoken)
         {
-            return await dbContext.Product.AsNoTracking().Where(product => product.Name.Contains(keyword) || product.Description.Contains(keyword)).Take(take).Skip(skip).ToListAsync(ctoken);
+            var queryable = GetProductsByKeywordWPagination(this.dbContext, lastProductId, take, keyword);
+            return queryable.AsAsyncEnumerable();
         }
     }
 }

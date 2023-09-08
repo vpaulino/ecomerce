@@ -29,7 +29,7 @@ namespace ProductsApi.Products.Controllers
 
 
         [HttpGet(Name = "GetAllProducts")]
-        public async Task<IActionResult> GetAllProducts(int lastProductId, int take, CancellationToken ctoken)
+        public IActionResult GetAllProducts(int lastProductId, int take, CancellationToken ctoken)
         {
             IAsyncEnumerable<Product> result =  productsRepository.GetProducts(lastProductId, take, ctoken);
             return Ok(result);
@@ -44,9 +44,9 @@ namespace ProductsApi.Products.Controllers
 
 
         [HttpGet("search", Name = "Search")]
-        public async Task<IActionResult> SearchAsync(int skip, int take, string keyword, CancellationToken ctoken)
+        public  IActionResult SearchAsync(int skip, int take, string keyword, CancellationToken ctoken)
         {
-            IEnumerable<Product> productsFound = await productsRepository.SearchProductAsync(take, skip, keyword, ctoken);
+            var productsFound = productsRepository.SearchProductAsync(take, skip, keyword, ctoken);
             return Ok(productsFound);
         }
 

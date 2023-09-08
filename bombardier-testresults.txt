@@ -1,0 +1,75 @@
+C:\Users\vmlep\repos>bombardier -n1000 -d30s -r10 https://localhost:7033/api/v1/Products?take=50&lastProductId=0
+Bombarding https://localhost:7033/api/v1/Products?take=50 with 1000 request(s) using 125 connection(s)
+ 1000 / 1000 [================================================================================================================================================================================================] 100.00% 10/s 1m39s
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec        10.08       6.88     193.89
+  Latency       24.79ms   169.57ms      2.03s
+  HTTP codes:
+    1xx - 0, 2xx - 1000, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:    98.93KB/s
+'lastProductId' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\vmlep\repos>bombardier -n1000 -d30s -r10 https://localhost:7033/api/v1/Products?take=50&lastProductId=0
+Bombarding https://localhost:7033/api/v1/Products?take=50 with 1000 request(s) using 125 connection(s)
+ 1000 / 1000 [================================================================================================================================================================================================] 100.00% 10/s 1m39s
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec        10.03      10.57     313.86
+  Latency       72.67ms   405.47ms      3.67s
+  HTTP codes:
+    1xx - 0, 2xx - 1000, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:    99.38KB/s
+'lastProductId' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\vmlep\repos>bombardier -n1000 -d30s -r10 https://localhost:7033/api/v1/Products?take=50&lastProductId=0
+Bombarding https://localhost:7033/api/v1/Products?take=50 with 1000 request(s) using 125 connection(s)
+ 1000 / 1000 [=================================================================================================================================================================================================] 100.00% 9/s 1m40s
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec        10.06       6.75     189.95
+  Latency       25.97ms   175.69ms      2.07s
+  HTTP codes:
+    1xx - 0, 2xx - 1000, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:    98.93KB/s
+'lastProductId' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\vmlep\repos>bombardier -n1000 -d30s -r10 https://localhost:7033/api/v1/Products?take=50&lastProductId=0
+Bombarding https://localhost:7033/api/v1/Products?take=50 with 1000 request(s) using 125 connection(s)
+ 1000 / 1000 [=================================================================================================================================================================================================] 100.00% 9/s 1m40s
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec        10.07       4.41      78.04
+  Latency       19.60ms   106.74ms      1.46s
+  HTTP codes:
+    1xx - 0, 2xx - 0, 3xx - 0, 4xx - 0, 5xx - 1000
+    others - 0
+  Throughput:    46.06KB/s
+'lastProductId' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\vmlep\repos>bombardier -n1000 -d30s -r10 -l https://localhost:7033/api/v1/Products?take=50&lastProductId=0
+Bombarding https://localhost:7033/api/v1/Products?take=50 with 1000 request(s) using 125 connection(s)
+ 1000 / 1000 [=================================================================================================================================================================================================] 100.00% 9/s 1m40s
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec        10.06       5.70     156.80
+  Latency       21.51ms   120.20ms      1.60s
+  Latency Distribution
+     50%     7.53ms
+     75%     9.04ms
+     90%    10.67ms
+     95%    12.52ms
+     99%   609.32ms
+  HTTP codes:
+    1xx - 0, 2xx - 0, 3xx - 0, 4xx - 0, 5xx - 1000
+    others - 0
+  Throughput:    46.03KB/s
+'lastProductId' is not recognized as an internal or external command,
+operable program or batch file.
