@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Linq;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+using System.Linq.Expressions;
 
 namespace ProductsApi.Products.Repository
 {
@@ -12,12 +13,11 @@ namespace ProductsApi.Products.Repository
     {
         private ProductsDbContext dbContext;
 
+        private static readonly Func<ProductsDbContext, long?,int, IAsyncEnumerable<Product>> GetProductsWPagination = EF.CompileAsyncQuery((ProductsDbContext _dbContext, long? lastProductId, int take) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId).Take(take));
 
-        private static readonly Func<ProductsDbContext,long, int, IQueryable<Product>> GetProductsWPagination = EF.CompileQuery<ProductsDbContext,long, int, IQueryable<Product>>((_dbContext, lastProductId, take) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId).Take(take));
+        private static readonly Func<ProductsDbContext, long?, int, int, IAsyncEnumerable<Product>> GetProductsByRankWPagination = EF.CompileAsyncQuery((ProductsDbContext _dbContext,long? lastProductId, int take, int rank) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId && product.Rank == rank).Take(take));
 
-        private static readonly Func<ProductsDbContext, long, int, int, IQueryable<Product>> GetProductsByRankWPagination = EF.CompileQuery<ProductsDbContext, long, int,int, IQueryable<Product>>((_dbContext, lastProductId, take, rank) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId && product.Rank == rank).Take(take));
-
-        private static readonly Func<ProductsDbContext, long, int, string, IQueryable<Product>> GetProductsByKeywordWPagination = EF.CompileQuery<ProductsDbContext, long, int, string, IQueryable<Product>>((_dbContext, lastProductId, take, keyword) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId && (product.Name.Contains(keyword) || product.Description.Contains(keyword))).Take(take));
+        private static readonly Func<ProductsDbContext, long?, int, string, IAsyncEnumerable<Product>> GetProductsByKeywordWPagination = EF.CompileAsyncQuery((ProductsDbContext _dbContext, long? lastProductId, int take,string keyword) => _dbContext.Product.AsNoTracking().OrderBy(product => product.Id).Where(product => product.Id >= lastProductId && (product.Name.Contains(keyword) || product.Description.Contains(keyword))).Take(take));
 
         public SqlServerProductsRepository(ProductsDbContext dbcontext)
         {
@@ -34,14 +34,14 @@ namespace ProductsApi.Products.Repository
         
         public  IAsyncEnumerable<Product> GetProducts(long lastProductId, int take, CancellationToken token)
         {
-            var queryable = GetProductsWPagination(this.dbContext, lastProductId, take);
-            return queryable.AsAsyncEnumerable();
+            var results = GetProductsWPagination(dbContext, lastProductId, take);
+            return results;
         }
 
         public  IAsyncEnumerable<Product> GetProductsRankedAsync(long lastProductId, int take, int rank, CancellationToken token)
         {
-            var queryable = GetProductsByRankWPagination(this.dbContext, lastProductId, take, rank);
-            return queryable.AsAsyncEnumerable();
+            var results = GetProductsByRankWPagination(this.dbContext, lastProductId, take, rank);
+            return results;
         }
 
         public async Task<Product> GetProductAsync(long id, CancellationToken ctoken)
@@ -51,8 +51,8 @@ namespace ProductsApi.Products.Repository
 
         public IAsyncEnumerable<Product> SearchProductAsync(long lastProductId, int take, string keyword, CancellationToken ctoken)
         {
-            var queryable = GetProductsByKeywordWPagination(this.dbContext, lastProductId, take, keyword);
-            return queryable.AsAsyncEnumerable();
+            var results = GetProductsByKeywordWPagination(this.dbContext, lastProductId, take, keyword);
+            return results;
         }
     }
 }

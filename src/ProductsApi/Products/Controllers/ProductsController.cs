@@ -44,9 +44,9 @@ namespace ProductsApi.Products.Controllers
 
 
         [HttpGet("search", Name = "Search")]
-        public  IActionResult SearchAsync(int skip, int take, string keyword, CancellationToken ctoken)
+        public IActionResult SearchAsync(int lastProductId, int take, string keyword, CancellationToken ctoken)
         {
-            var productsFound = productsRepository.SearchProductAsync(take, skip, keyword, ctoken);
+            var productsFound = productsRepository.SearchProductAsync(lastProductId, take, keyword, ctoken);
             return Ok(productsFound);
         }
 

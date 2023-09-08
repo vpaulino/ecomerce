@@ -40,7 +40,7 @@ namespace ProductsApi.Extensions
             services.AddScoped<TRepository>();
             services.AddDbContext<TDbContext>(options => options.UseSqlServer(connectionString, (options) =>
             {
-                options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+               // options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 options.CommandTimeout(5);
                 options.EnableRetryOnFailure();
             }));
