@@ -25,6 +25,12 @@ namespace WebSite.Services
             
         }
 
+        public async Task<long> GetProductsCount(CancellationToken ctoken)
+        {
+                var productCount = await _productsApiHttpClient.GetFromJsonAsync<ProductCount>($"/api/v1/Products/count", ctoken);
+                return productCount.TotalRecords;
+        }
+
         internal async Task<IEnumerable<Product>> GetAllProductsByKeyword(long lastProductId, int pageSize, string searchText, CancellationToken ctoken)
         {
             try

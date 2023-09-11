@@ -42,10 +42,12 @@
             </tbody>
         </table>
          <p><input @bind="LastProductId" /></p>
-        <button @onclick="FetchProductsAsync" disabled="@currentPage == 1">Previous</button>
-        <button @onclick="FetchProductsAsync">Next</button>
+         <p> Pages @currentPage / @totalPages </p>
 
     }
+
+    <button @onclick="PreviousOnClick">Previous</button>
+    <button @onclick="NextOnClick">Next</button>
 
 
 }

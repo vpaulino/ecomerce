@@ -41,29 +41,49 @@ namespace WebSite.Pages
         private async Task FetchProductsAsync()
         {
             
-            await ManagePageState(async ()=> await ProductsService.GetAllProducts(LastProductId, pageSize, CancellationToken.None));
+            await ManageTableState(async ()=> await ProductsService.GetAllProducts(LastProductId, pageSize, CancellationToken.None));
           
+        }
+
+        private async Task PreviousOnClick() 
+        {
+           
+            await ManageTableState(async () => await ProductsService.GetAllProducts(LastProductId - 2*pageSize, pageSize, CancellationToken.None));
+            this.currentPage--;
+        }
+
+        private async Task NextOnClick()
+        {
+            this.currentPage++;
+            await ManageTableState(async () => await ProductsService.GetAllProducts(LastProductId, pageSize, CancellationToken.None));
+
         }
 
         private async Task Search()
         {
             
-            await ManagePageState(async () => await ProductsService.GetAllProductsByKeyword(LastProductId, pageSize, searchText, CancellationToken.None));
+            await ManageTableState(async () => await ProductsService.GetAllProductsByKeyword(LastProductId, pageSize, searchText, CancellationToken.None));
         }
+ 
 
-        private async Task ManagePageState(Func<Task<IEnumerable<Product>>> productServiceHandler)
+        private async Task ManageTableState(Func<Task<IEnumerable<Product>>> productServiceHandler)
         {
             try
             {
                 this.ErrorMessage = string.Empty;
                 ProductsLoading = true;
-               
+
+                long totalRecordsCount = await this.ProductsService.GetProductsCount(CancellationToken.None);
+
+                this.totalPages = ((int)(totalRecordsCount / this.pageSize))+1;
+
 
                 var products = await productServiceHandler();
                 if (products.Any())
                 {
-                    this.LastProductId = products.Max(product => product.Id);
+                    this.LastProductId = products.Max(product => product.Id)+1;
                     this.displayedProducts = products;
+                    
                 }
                 else 
                 {
