@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		bombardier-testresults.txt = bombardier-testresults.txt
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSite", "src\WebSite\WebSite.csproj", "{6DE9B11D-B3C3-4AD9-9DAE-E7D26CD5B915}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{856E5725-0B4D-4EBD-84A8-AAAD2F79CE12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{856E5725-0B4D-4EBD-84A8-AAAD2F79CE12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{856E5725-0B4D-4EBD-84A8-AAAD2F79CE12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE9B11D-B3C3-4AD9-9DAE-E7D26CD5B915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE9B11D-B3C3-4AD9-9DAE-E7D26CD5B915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE9B11D-B3C3-4AD9-9DAE-E7D26CD5B915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE9B11D-B3C3-4AD9-9DAE-E7D26CD5B915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +51,7 @@ Global
 		{A4810F8A-0164-4CB0-B0F1-668D29AA4E30} = {2BC3C7BD-D9E5-4E0E-A49D-D319EE2D0AE1}
 		{8A93A3B1-D9A1-40D4-A988-CC3228BD55F6} = {99557D07-2F57-4896-AA97-C5DE3D93E612}
 		{856E5725-0B4D-4EBD-84A8-AAAD2F79CE12} = {2BC3C7BD-D9E5-4E0E-A49D-D319EE2D0AE1}
+		{6DE9B11D-B3C3-4AD9-9DAE-E7D26CD5B915} = {2BC3C7BD-D9E5-4E0E-A49D-D319EE2D0AE1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BA9246B-1792-478A-B467-BF0066FCBCC2}
