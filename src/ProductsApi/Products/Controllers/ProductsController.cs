@@ -27,6 +27,14 @@ namespace ProductsApi.Products.Controllers
             return Ok();
         }
 
+        [ResponseCache(Duration =60)]
+        [HttpGet("count", Name = "GetProductsCount")]
+        public async Task<IActionResult> GetProductsCount(CancellationToken ctoken)
+        {
+            long countProducts = await productsRepository.GetProductsCount(ctoken);
+            return Ok(new { TotalRecords = countProducts, Date = DateTime.UtcNow });
+        }
+
 
         [HttpGet(Name = "GetAllProducts")]
         public IActionResult GetAllProducts(int lastProductId, int take, CancellationToken ctoken)

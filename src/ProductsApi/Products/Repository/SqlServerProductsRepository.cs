@@ -54,5 +54,10 @@ namespace ProductsApi.Products.Repository
             var results = GetProductsByKeywordWPagination(this.dbContext, lastProductId, take, keyword);
             return results;
         }
+
+        public async Task<long> GetProductsCount(CancellationToken ctoken)
+        {
+            return await dbContext.Product.CountAsync(ctoken);
+        }
     }
 }

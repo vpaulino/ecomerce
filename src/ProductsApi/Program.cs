@@ -14,11 +14,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("redis");
+    options.InstanceName = "ProductsApi"; // Unique identifier for your app
+});
 
 builder.Services.AddSqlServerRepository<SqlServerProductsRepository, ProductsDbContext>(builder.Configuration.GetConnectionString("Products"));
 
 builder.Services.AddScoped<InsertProductsService>();
-
 
 
 builder.Services.AddApiUrlVersioning();
@@ -35,6 +39,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseResponseCaching();
 
 app.UseMigrationsEndPoint();
 
