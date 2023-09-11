@@ -41,13 +41,13 @@
                 }
             </tbody>
         </table>
-         <p><input @bind="LastProductId" /></p>
-         <p> Pages @currentPage / @totalPages </p>
+         
 
     }
-
-    <button @onclick="PreviousOnClick">Previous</button>
-    <button @onclick="NextOnClick">Next</button>
+    <p><input style="visibility:hidden" @bind="LastProductId" /></p>
+    <p> Pages @currentPage / @totalPages (@TotalRecordsCount) </p>
+    <button @onclick="PreviousOnClick" disabled="@IsPreviousDisabled()">Previous</button>
+    <button @onclick="NextOnClick" disabled="@IsNextDisabled()">Next</button>
 
 
 }

@@ -18,7 +18,7 @@ namespace WebSite.Pages
 
         [Parameter]
         public bool ProductsLoading { get; set; }
-
+        public long TotalRecordsCount { get; private set; }
         [Parameter]
         public string ErrorMessage { get; set; }
 
@@ -73,9 +73,9 @@ namespace WebSite.Pages
                 this.ErrorMessage = string.Empty;
                 ProductsLoading = true;
 
-                long totalRecordsCount = await this.ProductsService.GetProductsCount(CancellationToken.None);
-
-                this.totalPages = ((int)(totalRecordsCount / this.pageSize))+1;
+                this.TotalRecordsCount = await this.ProductsService.GetProductsCount(CancellationToken.None);
+                
+                this.totalPages = ((int)(TotalRecordsCount / this.pageSize))+1;
 
 
                 var products = await productServiceHandler();
@@ -104,6 +104,16 @@ namespace WebSite.Pages
 
             }
 
+        }
+
+        private bool IsPreviousDisabled() 
+        {
+            return this.currentPage == 1;
+        }
+
+        private bool IsNextDisabled()
+        {
+            return this.currentPage == this.totalPages;
         }
     }
 }
