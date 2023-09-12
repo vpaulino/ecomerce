@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Linq;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace ProductsApi.Products.Repository
 {
@@ -51,8 +52,18 @@ namespace ProductsApi.Products.Repository
 
         public IAsyncEnumerable<Product> SearchProductAsync(long lastProductId, int take, string keyword, CancellationToken ctoken)
         {
-            var results = GetProductsByKeywordWPagination(this.dbContext, lastProductId, take, keyword);
-            return results;
+            IAsyncEnumerable<Product> products = null;
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                products = GetProductsByKeywordWPagination(this.dbContext, lastProductId, take, keyword);
+                
+            }
+            else 
+            {
+                products = GetProductsWPagination(dbContext, lastProductId, take);
+            }
+            
+            return products;
         }
 
         public async Task<long> GetProductsCount(CancellationToken ctoken)

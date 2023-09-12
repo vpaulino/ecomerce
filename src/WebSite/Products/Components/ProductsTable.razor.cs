@@ -70,7 +70,8 @@ namespace WebSite.Products.Components
 
         private async Task Search()
         {
-            
+            this.currentPage = 1;
+            this.LastProductId = 0;
             await ManageTableState(async () => await ProductsService.GetAllProductsByKeyword(LastProductId, pageSize, searchText, CancellationToken.None));
         }
  

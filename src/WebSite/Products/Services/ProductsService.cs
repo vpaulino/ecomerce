@@ -38,7 +38,7 @@ namespace WebSite.Services
                 var results = await _productsApiHttpClient.GetFromJsonAsync<IEnumerable<Product>>($"/api/v1/products/search?lastProductId={lastProductId}&take={pageSize}&keyword={searchText}", ctoken);
                 return results;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Enumerable.Empty<Product>();
                 throw;
