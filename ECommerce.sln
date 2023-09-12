@@ -13,11 +13,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		bombardier-testresults.txt = bombardier-testresults.txt
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSite", "src\WebSite\WebSite.csproj", "{6DE9B11D-B3C3-4AD9-9DAE-E7D26CD5B915}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{3F11E694-4A94-4B03-9E85-3B979ECCE248}"
+	ProjectSection(SolutionItems) = preProject
+		src\Apis\Directory.Build.props = src\Apis\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsApi", "src\Apis\ProductsApi\ProductsApi.csproj", "{02C08594-BC23-482E-9512-59814DB94CF2}"
 EndProject
