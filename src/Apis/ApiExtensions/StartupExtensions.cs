@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
- 
+using Microsoft.Extensions.DependencyInjection;
 
-namespace ProductsApi.Extensions
+namespace ApisExtensions
 {
     public static class StartupExtensions
     {

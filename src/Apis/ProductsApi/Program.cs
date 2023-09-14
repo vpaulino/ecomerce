@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using ProductsApi.Extensions;
+using ApisExtensions;
 using ProductsApi.Products.Repository;
 using ProductsApi.Products.SetupDb;
 
