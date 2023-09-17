@@ -2,10 +2,10 @@
 
 namespace WebSite.Services
 {
-    public class ProductsService
+    public class ProductsServiceClient
     {
         private HttpClient _productsApiHttpClient;
-        public ProductsService(HttpClient client)
+        public ProductsServiceClient(HttpClient client)
         {
             _productsApiHttpClient = client;
 

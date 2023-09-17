@@ -24,8 +24,12 @@ builder.Services.AddOutputCache(options =>
 {
     
     options.AddBasePolicy(builder => builder.Tag("tag-baskets"));
-    options.AddPolicy("basketCached", builder => builder.Expire(new TimeSpan(0,0,20)));
-    
+    options.AddPolicy("basketCached", builder => { 
+        builder.Tag("tag-baskets");
+        builder.Expire(new TimeSpan(0, 0, 20));
+    });
+    options.AddPolicy("basketCountCached", builder => { builder.Tag("tag-baskets"); builder.Expire(new TimeSpan(0, 0, 20)); });
+
 });
 
 builder.Services.AddApiUrlVersioning();

@@ -1,7 +1,8 @@
-﻿ 
+﻿@using WebSite.Basket.Services;
+@inject BasketServiceClient basketServiceClient
 
 <div class="product-quantity-input">
-    <button @onclick="DecreaseQuantity">-</button>
-    <input type="number" @bind="Quantity" max="999" min="0"/>
-    <button @onclick="IncreaseQuantity">+</button>
+    @CurrentQuantity
+    <input type="number" @bind-value="Quantity" max="999" min="0" />
+    <button @onclick="PersistQuantity">Update Basket</button>
 </div>

@@ -25,6 +25,7 @@
                     <th>Name</th>
                     <th>Category</th>
                     <th>Rank</th>
+                    <th>Basket</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,7 +35,7 @@
                         <td>@product.Name</td>
                         <td>@product.Category</td>
                         <td>@product.Rank</td>
-                        <td><ProductQuantityInput ProductId="@product.Id" Quantity="0" /></td>
+                        <td><ProductQuantityInput ProductId="@product.Id" Quantity="0" OnQuantityUpdated="OnProductQuantityUpdatedHandler" /></td>
                     </tr>
                 }
             </tbody>

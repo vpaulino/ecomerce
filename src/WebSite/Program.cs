@@ -4,6 +4,7 @@ using Polly.Extensions.Http;
 using Polly;
 using WebSite.Configuration;
 using WebSite.Services;
+using WebSite.Basket.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
@@ -22,12 +23,17 @@ BackendApis backendApis = new BackendApis();
 
 builder.Configuration.GetSection(BackendApis.BackendApisSection).Bind(backendApis);
 
-builder.Services.AddHttpClient<ProductsService>(client => 
+builder.Services.AddHttpClient<ProductsServiceClient>(client => 
 {
     client.BaseAddress = new Uri(backendApis.ProductsApi);
 }).SetHandlerLifetime(TimeSpan.FromMinutes(2))
   .AddPolicyHandler(GetRetryPolicy());
- 
+
+builder.Services.AddHttpClient<BasketServiceClient>(client =>
+{
+    client.BaseAddress = new Uri(backendApis.BasketApi);
+}).SetHandlerLifetime(TimeSpan.FromMinutes(2))
+  .AddPolicyHandler(GetRetryPolicy());
 
 
 var app = builder.Build();

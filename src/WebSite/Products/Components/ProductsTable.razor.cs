@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using WebSite.Basket.Components;
 using WebSite.Models;
 using WebSite.Services;
 
@@ -13,7 +15,7 @@ namespace WebSite.Products.Components
         private string searchText = "";
 
         [Inject]
-        private ProductsService ProductsService { get; set; }
+        private ProductsServiceClient ProductsService { get; set; }
 
 
         [Parameter]
@@ -25,6 +27,10 @@ namespace WebSite.Products.Components
         [Parameter]
         public long LastProductId { get; set; }
 
+        [Parameter]
+        public EventCallback<ProductQuantityEventArgs> OnQuantityUpdated { get; set; }
+
+
         public ProductsTable()
         {
 
@@ -35,6 +41,13 @@ namespace WebSite.Products.Components
             
             base.OnInitialized();
             await FetchProductsAsync();
+        }
+
+
+        public void OnProductQuantityUpdatedHandler(ProductQuantityEventArgs e)
+        {
+            // notify backend the amount of items to reserve to this customer 
+            OnQuantityUpdated.InvokeAsync(e);
         }
 
 

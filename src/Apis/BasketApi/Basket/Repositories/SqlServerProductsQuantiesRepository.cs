@@ -15,15 +15,17 @@ namespace ProductsApi.Products.Repository
     {
         private ProductQuantityDbContext dbContext;
 
-        private static readonly Func<ProductQuantityDbContext, long?,long?, int, IAsyncEnumerable<ProductQuantity>> GetProductsWPagination = EF.CompileAsyncQuery((ProductQuantityDbContext _dbContext, long? ownerId, long? productId, int take) => _dbContext.ProductQuantity.AsNoTracking().OrderBy(product => product.ProductId).Where(product => product.OwnerId == ownerId && product.ProductId > productId).Take(take));
-        
+        private static readonly Func<ProductQuantityDbContext, long?,long?, int, IAsyncEnumerable<ProductQuantity>> GetBasketItemsWPagination = EF.CompileAsyncQuery((ProductQuantityDbContext _dbContext, long? ownerId, long? productId, int take) => _dbContext.ProductQuantity.AsNoTracking().OrderBy(product => product.ProductId).Where(product => product.OwnerId == ownerId && product.ProductId > productId).Take(take));
+
+        private static readonly Func<ProductQuantityDbContext, long?, int> GetBasketItemsCountWPagination = EF.CompileQuery((ProductQuantityDbContext _dbContext, long? ownerId) => _dbContext.ProductQuantity.AsNoTracking().OrderBy(product => product.ProductId).Where(product => product.OwnerId == ownerId).Sum((productQuantity)=> productQuantity.Quantity));
+
         public SqlServerProductsQuantiesRepository(ProductQuantityDbContext dbcontext)
         {
             dbContext = dbcontext;
         }
 
 
-        public async Task SetProductQuantityAsync(ProductQuantity product, CancellationToken token)
+        public async Task UpdateBasketAsync(ProductQuantity product, CancellationToken token)
         {
             
                 Func<ProductQuantity, bool> getProductByComposedKey = prodQuantity => prodQuantity.ProductId == product.ProductId && prodQuantity.OwnerId == product.OwnerId;
@@ -33,12 +35,12 @@ namespace ProductsApi.Products.Repository
 
                 switch (product.Quantity)
                 {
-                    case >= 0 when found is null: 
+                    case > 0 when found is null: 
                         {
                             dbContext.Add<ProductQuantity>(product);
                             break;
                         }
-                    case >= 0 when found is not null: 
+                    case > 0 when found is not null: 
                         {
                             found.Quantity = product.Quantity;
                             found.Updated = DateTime.UtcNow;
@@ -60,11 +62,15 @@ namespace ProductsApi.Products.Repository
         }
 
         
-        public  IAsyncEnumerable<ProductQuantity> GetQuantities(long ownerId,long lastProductId, int take, CancellationToken token)
+        public  IAsyncEnumerable<ProductQuantity> GetBasketItems(long ownerId,long lastProductId, int take, CancellationToken token)
         {
-            var results = GetProductsWPagination(dbContext, ownerId, lastProductId, take);
+            var results = GetBasketItemsWPagination(dbContext, ownerId, lastProductId, take);
             return results;
         }
-           
+
+        public int GetBasketItemsCount(long ownerId, CancellationToken token)
+        {
+            return GetBasketItemsCountWPagination(this.dbContext, ownerId);
+        }
     }
 }

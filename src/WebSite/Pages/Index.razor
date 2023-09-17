@@ -1,4 +1,8 @@
 ﻿@page "/"
 @using WebSite.Products.Components
+@using WebSite.Basket.Components;
 
-<ProductsTable  />
+ <ProductQuantityOutput @ref="productQuantityOutput" />
+
+<ProductsTable OnQuantityUpdated="OnProductQuantityUpdatedEventHandler"  />
+

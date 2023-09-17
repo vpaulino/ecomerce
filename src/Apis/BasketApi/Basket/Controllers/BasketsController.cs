@@ -19,14 +19,14 @@ public class BasketsController : ControllerBase
     }
 
 
-    [HttpPut("product")]
+    [HttpPut("item")]
     public async Task<IActionResult> AddItemToBasketAsync(ProductQuantityApiModel productQuantity, CancellationToken token)
     {
         try
         {
             
             DateTime updated = DateTime.UtcNow;
-            await repository.SetProductQuantityAsync(new ProductQuantity() { OwnerId = productQuantity.OwnerId, ProductId = productQuantity.ProductId, Quantity = productQuantity.Quantity, Updated = updated }, token);
+            await repository.UpdateBasketAsync(new ProductQuantity() { OwnerId = productQuantity.OwnerId, ProductId = productQuantity.ProductId, Quantity = productQuantity.Quantity, Updated = updated }, token);
             await cache.EvictByTagAsync("tag-baskets", token);
             return Ok(new { ProductId = productQuantity.ProductId, Updated = updated });
         }
@@ -38,13 +38,21 @@ public class BasketsController : ControllerBase
 
     }
 
-    [HttpGet("{ownerId}")]
+    [HttpGet("{ownerId}/items")]
     [OutputCache( PolicyName = "basketCached", VaryByRouteValueNames = new string[] { "ownerId"}, VaryByQueryKeys = new string[] { "lastProductId", "take" })]
     public async Task<IActionResult> GetItemsFromBasketAsync(long ownerId,long lastProductId, int take, CancellationToken token)
     {
         
-            var results = repository.GetQuantities(ownerId, lastProductId, take, token);
+            var results = repository.GetBasketItems(ownerId, lastProductId, take, token);
             return Ok(results);
+    }
+
+    [HttpGet("{ownerId}/count")]
+    [OutputCache(PolicyName = "basketCountCached", VaryByRouteValueNames = new string[] { "ownerId" })]
+    public IActionResult GetItemsCountAsync(long ownerId,  CancellationToken token)
+    {
+        var count = repository.GetBasketItemsCount(ownerId, token);
+        return Ok(new { OwnerId = ownerId, Count = count });
     }
 
 
