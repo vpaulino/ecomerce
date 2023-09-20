@@ -2,4 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ApiExtensions\ApiExtensions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+  
+  </ItemGroup>
 </Project>

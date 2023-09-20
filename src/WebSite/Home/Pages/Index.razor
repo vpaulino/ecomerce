@@ -1,0 +1,16 @@
+﻿@page "/"
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using WebSite.Products.Components
+@using WebSite.Basket.Components;
+
+
+<AuthorizeView>
+    <Authorized>
+        <ProductQuantityOutput @ref="productQuantityOutput" />
+    </Authorized>
+</AuthorizeView>
+ 
+
+<ProductsTable OnQuantityUpdated="OnProductQuantityUpdatedEventHandler"  />
+

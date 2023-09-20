@@ -3,7 +3,7 @@ using WebSite.Basket.Components;
 using WebSite.Models;
 using WebSite.Services;
 
-namespace WebSite.Pages
+namespace WebSite.Home.Pages
 {
     public partial class Index
     {
@@ -14,6 +14,11 @@ namespace WebSite.Pages
             productQuantityOutput.UpdateQuantity(args);
         }
 
+        protected override Task OnInitializedAsync()
+        {
+            
+            return base.OnInitializedAsync();
+        }
     }
 
 

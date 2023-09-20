@@ -1,39 +1,60 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Polly.Extensions.Http;
 using Polly;
 using WebSite.Configuration;
 using WebSite.Services;
 using WebSite.Basket.Services;
+using Microsoft.EntityFrameworkCore;
+using WebSite.Repository;
+using Microsoft.AspNetCore.Identity;
+using ApisExtensions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
-{
-    return HttpPolicyExtensions
-        .HandleTransientHttpError()
-        .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-        .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
-                                                                    retryAttempt)));
-}
+builder.Services.AddHttpContextAccessor();
 
 BackendApis backendApis = new BackendApis();
 
 builder.Configuration.GetSection(BackendApis.BackendApisSection).Bind(backendApis);
 
-builder.Services.AddHttpClient<ProductsServiceClient>(client => 
-{
-    client.BaseAddress = new Uri(backendApis.ProductsApi);
-}).SetHandlerLifetime(TimeSpan.FromMinutes(2))
-  .AddPolicyHandler(GetRetryPolicy());
+builder.Services.AddHttpClientAdapter<ProductsServiceClient>(new Uri(backendApis.ProductsApi));
+builder.Services.AddHttpClientAdapter<BasketServiceClient>(new Uri(backendApis.BasketApi));
 
-builder.Services.AddHttpClient<BasketServiceClient>(client =>
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie((cookieAuthOptions) => 
 {
-    client.BaseAddress = new Uri(backendApis.BasketApi);
-}).SetHandlerLifetime(TimeSpan.FromMinutes(2))
-  .AddPolicyHandler(GetRetryPolicy());
+    cookieAuthOptions.Cookie.Name = "goo-auth-cookie";
+    cookieAuthOptions.Cookie.HttpOnly = true;
+    cookieAuthOptions.Cookie.IsEssential = true;
+    cookieAuthOptions.LoginPath = "/auth/google-login";
+    
+
+}).AddGoogle(options => 
+{
+    builder.Configuration.GetSection("GoogleAuth").Bind(options);
+    options.Events.OnRemoteFailure = (context) => { return Task.CompletedTask; };
+    options.Events.OnCreatingTicket = (context) => 
+    {   
+        string pictureUri = context?.User.GetProperty("picture").GetString();
+        string userId = context?.User.GetProperty("id").GetString();
+        string email = context?.User.GetProperty("email").GetString();
+        string name = context?.User.GetProperty("name").GetString();
+
+        context.Identity.AddClaim(new Claim("id", userId));
+        context.Identity.AddClaim(new Claim("email", email));
+        context.Identity.AddClaim(new Claim("name", userId));
+        context.Identity.AddClaim(new Claim("picture", pictureUri));
+        
+        return Task.CompletedTask; 
+    };
+    options.Events.OnAccessDenied = (context) => { return Task.CompletedTask; };
+    options.Events.OnTicketReceived = (context) => { return Task.CompletedTask; };
+
+
+});
 
 
 var app = builder.Build();
@@ -50,6 +71,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
