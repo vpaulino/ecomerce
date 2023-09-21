@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebSite.Products.Components
 @using WebSite.Basket.Components;
-
+@inject AuthenticationStateProvider authStateProvider;
 
 <AuthorizeView>
     <Authorized>

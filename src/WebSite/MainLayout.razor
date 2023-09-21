@@ -4,10 +4,11 @@
 <AuthorizeView>
     <Authorized>
         <img src="@context.User.Claims.Where(claim => claim.Type =="picture").FirstOrDefault()?.Value" />
-        Hello @context.User.Identity.Name!  <a href="auth/google-logout">Logout</a>
+        Hello @context.User.Identity.Name!  <a href="auth/logout">Logout</a>
     </Authorized>
     <NotAuthorized>
-        <a href="auth/google-login">Login with google</a>
+        <a href="auth/google-login">Login for Clients</a>
+        <a href="auth/msftlive-login">Login for Organization</a>
     </NotAuthorized>
 </AuthorizeView>
 

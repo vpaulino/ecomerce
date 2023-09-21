@@ -10,6 +10,11 @@ using ApisExtensions;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text.Json;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
@@ -24,38 +29,32 @@ builder.Configuration.GetSection(BackendApis.BackendApisSection).Bind(backendApi
 builder.Services.AddHttpClientAdapter<ProductsServiceClient>(new Uri(backendApis.ProductsApi));
 builder.Services.AddHttpClientAdapter<BasketServiceClient>(new Uri(backendApis.BasketApi));
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie((cookieAuthOptions) => 
+builder.Services.AddAuthentication(options =>
 {
-    cookieAuthOptions.Cookie.Name = "goo-auth-cookie";
-    cookieAuthOptions.Cookie.HttpOnly = true;
-    cookieAuthOptions.Cookie.IsEssential = true;
-    cookieAuthOptions.LoginPath = "/auth/google-login";
-    
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme; // Azure AD provider
 
-}).AddGoogle(options => 
+}).AddCookie(options =>
+   {
+   })
+   .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+   {
+       builder.Configuration.GetSection("AzureAD").Bind(options);
+   })
+   .AddGoogle(options =>
+   {
+       builder.Configuration.GetSection("GoogleAuth").Bind(options);
+   });
+
+// Configure authorization policies (optional)
+builder.Services.AddAuthorization(options =>
 {
-    builder.Configuration.GetSection("GoogleAuth").Bind(options);
-    options.Events.OnRemoteFailure = (context) => { return Task.CompletedTask; };
-    options.Events.OnCreatingTicket = (context) => 
-    {   
-        string pictureUri = context?.User.GetProperty("picture").GetString();
-        string userId = context?.User.GetProperty("id").GetString();
-        string email = context?.User.GetProperty("email").GetString();
-        string name = context?.User.GetProperty("name").GetString();
-
-        context.Identity.AddClaim(new Claim("id", userId));
-        context.Identity.AddClaim(new Claim("email", email));
-        context.Identity.AddClaim(new Claim("name", userId));
-        context.Identity.AddClaim(new Claim("picture", pictureUri));
-        
-        return Task.CompletedTask; 
-    };
-    options.Events.OnAccessDenied = (context) => { return Task.CompletedTask; };
-    options.Events.OnTicketReceived = (context) => { return Task.CompletedTask; };
-
-
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
 });
 
+ 
 
 var app = builder.Build();
 

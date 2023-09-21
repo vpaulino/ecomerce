@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,10 +21,23 @@ namespace WebSite.Auth
             this.httpContextAccessor = httpContextAccessor;
         }
 
+
+        [HttpGet("msftlive-login")]
+        public async Task<IActionResult> MsftLiveLoginChallenge(string returnUrl = "/") 
+        {
+            // these authentication properties are for the aspnet core middleware.
+            var challengeProperties = new AuthenticationProperties()
+            {
+                RedirectUri = returnUrl//,
+
+            };
+
+            return Challenge(challengeProperties, OpenIdConnectDefaults.AuthenticationScheme);
+        }
+
         [HttpGet("google-login")]
         public async Task<IActionResult> GoogleLoginChallenge(string returnUrl ="/") 
         {
-
             returnUrl = string.IsNullOrWhiteSpace(returnUrl) ? "/": returnUrl;
 
             // these authentication properties are for the aspnet core middleware.
@@ -36,7 +50,7 @@ namespace WebSite.Auth
             return Challenge(challengeProperties, GoogleDefaults.AuthenticationScheme);
         }
 
-        [HttpGet("google-logout")]
+        [HttpGet("logout")]
         public async Task<IActionResult> GoogleLogoutChallenge(string returnUrl = "/")
         {
 
@@ -44,9 +58,6 @@ namespace WebSite.Auth
 
             return Redirect("/");
         }
-
-
-
 
     }
 }
