@@ -28,7 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsApi", "src\Apis\Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketApi", "src\Apis\BasketApi\BasketApi.csproj", "{4B86886F-624E-485D-990D-5AF9864E55F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiExtensions", "src\Apis\ApiExtensions\ApiExtensions.csproj", "{379B6903-E115-45EB-8E6A-D8D4FCFC512D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiExtensions", "src\Apis\ApiExtensions\ApiExtensions.csproj", "{379B6903-E115-45EB-8E6A-D8D4FCFC512D}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8F017710-F6EE-403D-81BC-8AE48B0C6C60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{379B6903-E115-45EB-8E6A-D8D4FCFC512D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{379B6903-E115-45EB-8E6A-D8D4FCFC512D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{379B6903-E115-45EB-8E6A-D8D4FCFC512D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F017710-F6EE-403D-81BC-8AE48B0C6C60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F017710-F6EE-403D-81BC-8AE48B0C6C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F017710-F6EE-403D-81BC-8AE48B0C6C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F017710-F6EE-403D-81BC-8AE48B0C6C60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

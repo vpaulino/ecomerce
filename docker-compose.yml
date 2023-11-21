@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+
+  sql-server:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    ports:
+      - "1533:1433"
+    environment:
+      SA_PASSWORD: "MyP@$$w0rd23!"
+      ACCEPT_EULA: "Y"
+
+  productsapi:
+    image: ${DOCKER_REGISTRY-}productsapi
+    build:
+      context: .
+      dockerfile: src/Apis/ProductsApi/Dockerfile
+    ports:
+     - 7000:80
+     - 7443:443
+    environment:
+     - ASPNETCORE_URLS=https://+:443;http://+:80
+     - ConnectionStrings:Products= Server=sql-server,1533;Initial Catalog=Products;Integrated Security=true;Encrypt=False;TrustServerCertificate=True;
+     - ConnectionStrings:Redis=Server=redis;Port=6379;
+  
+
+  basketapi:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: src/Apis/BasketApi/Dockerfile
+    ports:
+     - 6000:80
+     - 8443:443
+    environment:
+    - ASPNETCORE_URLS=https://+:443;http://+:80
+     - ConnectionStrings:Baskets= Server=sql-server,1433;Initial Catalog=Baskets;Integrated Security=true;Encrypt=False;TrustServerCertificate=True;
+     - ConnectionStrings:Redis=Server=redis;Port=6379;
+
+  website:
+    image: ${DOCKER_REGISTRY-}website
+    build:
+      context: .
+      dockerfile: src/WebSite/Dockerfile
+    ports:
+      - 5000:80
+      - 5443:443
+    depends_on:
+      - basketapi
+      - productsapi
+    environment:
+    - ASPNETCORE_URLS=https://+:443;http://+:80
+     - ConnectionStrings:Identity= Server=sql-server,1433;Initial Catalog=Products;Integrated Security=true;Encrypt=False;TrustServerCertificate=True;
+     - BackendApis:ProductsApi=https://productsapi:7443
+     - BackendApis:BasketApi=https://basketapi:8443
+  
